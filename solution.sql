@@ -1,22 +1,26 @@
 -- WORLDBANK EXERCISE
 
 -- Q1. List countries with income level of "Upper middle income"
-SELECT name AS upper_middle_income_countries FROM countries
+SELECT name AS upper_middle_income_countries
+FROM countries
 WHERE "incomeLevel_value" = 'Upper middle income';
 
 -- Q2. List countries with income level of "Low income" per region
-SELECT "region_value" AS Region, name AS low_income_countries FROM countries
+SELECT "region_value" AS Region, name AS low_income_countries
+FROM countries
 WHERE "incomeLevel_value" = 'Low income'
 ORDER BY "region", "low_income_countries";
 
 -- Q3. Find the region with the highest proportion of "High income" countries.
 with t1 AS
-   (SELECT "region_value" AS region, "incomeLevel_value", COUNT("incomeLevel_value") AS count_income  FROM countries
-	WHERE "region_value" != 'Aggregates'
-	GROUP BY "region_value", "incomeLevel_value"),
+   (SELECT "region_value" AS region, "incomeLevel_value", COUNT("incomeLevel_value") AS count_income
+    FROM countries
+    WHERE "region_value" != 'Aggregates'
+    GROUP BY "region_value", "incomeLevel_value"),
 t2 AS
-	(SELECT region, "incomeLevel_value",  100*"count_income"/ SUM("count_income") OVER(PARTITION BY region) AS Percentage
-	FROM t1),
+	(SELECT region, "incomeLevel_value",  100*"count_income"/ SUM("count_income")
+    OVER(PARTITION BY region) AS Percentage
+   FROM t1),
 t3 AS
 	(SELECT *
 	 FROM t2
@@ -33,11 +37,10 @@ FROM t3
 -- Q4. Calculate cumulative/running value of GDP per region ordered by income from
 -- lowest to highest and country name.
 with t4 as
-
 	(SELECT *
-	FROM gdp
-	LEFT JOIN countries
-	ON gdp.country_code = countries.country_code),
+  FROM gdp
+  LEFT JOIN countries
+  ON gdp.country_code = countries.country_code),
 t5 AS
 	(SELECT country_name, region_value, "incomeLevel_value", COALESCE("1960", 0) +
 	 COALESCE("1961", 0) + COALESCE("1962", 0) + COALESCE("1963", 0) +
@@ -72,7 +75,6 @@ ORDER BY "cummGDP($bn)" ASC, region ASC
 
 -- Q5. Calculate percentage difference in value of GDP year-on-year per country
 with t12 AS
-
 	(SELECT *
 	FROM gdp
 	LEFT JOIN countries
@@ -148,7 +150,6 @@ SELECT * FROM t14
 
 -- Q6. List 3 countries with lowest GDP per region
 with t8 AS
-
 	(SELECT *
 	FROM gdp
 	LEFT JOIN countries
