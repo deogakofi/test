@@ -21,7 +21,7 @@ def get_countries():
         response = requests.get(urls)
         data = response.json()[1]
     except:
-        print('could not load data')
+        return 'could not load data'
 
     df_country = pandas.json_normalize(data)
     df_country.rename(columns = {'id': 'country_code'}, inplace = True)
